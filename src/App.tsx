@@ -135,7 +135,7 @@ function App() {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleHover);
     };
-  }, [effects.customCursor, hasTouch]);
+  }, [hasTouch]);
 
   return (
     <ReactLenis
