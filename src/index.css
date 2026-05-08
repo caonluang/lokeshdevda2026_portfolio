@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #f8f9fa;
+  --color-accent: #00ff88;
+  --color-background: #050505;
+  --color-surface: #111111;
+  --color-surface-hover: #1a1a1a;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-text-main: #ffffff;
+  --color-text-muted: #888888;
+  
+  --spacing-section: 120px;
+}
+
+@layer base {
+  :root {
+    --background: #050505;
+    --foreground: #ffffff;
+
+    /* Interaction design tokens */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --dur-quick: 140ms;
+    --dur-ui: 260ms;
+    --dur-panel: 420ms;
+  }
+
+  body {
+    @apply bg-[#050505] text-[#ffffff] antialiased selection:bg-[#ffffff] selection:text-[#050505];
+    font-family: var(--font-sans);
+    cursor: none; /* Hide default cursor for custom cursor */
+    overflow-x: hidden;
+  }
+
+  body.cursor-default {
+    cursor: auto;
+  }
+  body.cursor-default a,
+  body.cursor-default button {
+    cursor: pointer;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.9;
+  }
+
+  a, button {
+    cursor: none;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@layer utilities {
+  .text-outline {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+    color: transparent;
+  }
+  .text-outline:hover {
+    -webkit-text-stroke: 1px #ffffff;
+    color: #ffffff;
+  }
+  
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+
+  @keyframes ripple {
+    0% { transform: scale(0); opacity: 0.6; }
+    100% { transform: scale(3.5); opacity: 0; }
+  }
+  .animate-ripple {
+    animation: ripple 600ms ease-out forwards;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom Cursor CSS */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, background-color 0.3s;
+}
+
+.custom-cursor.active {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  mix-blend-mode: normal;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.custom-cursor.project-hover {
+  width: 120px;
+  height: 120px;
+  background-color: transparent;
+  mix-blend-mode: normal;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+/* Film grain / noise overlay */
+.noise {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.25) 0 1px, transparent 1px 100%),
+    radial-gradient(circle at 80% 10%, rgba(255,255,255,0.18) 0 1px, transparent 1px 100%),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.22) 0 1px, transparent 1px 100%),
+    radial-gradient(circle at 60% 60%, rgba(255,255,255,0.16) 0 1px, transparent 1px 100%);
+  background-size: 180px 180px;
+  animation: noise-shift 2.5s steps(10) infinite;
+}
+
+@keyframes noise-shift {
+  0% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-3%, 2%, 0); }
+  40% { transform: translate3d(2%, -3%, 0); }
+  60% { transform: translate3d(-2%, -2%, 0); }
+  80% { transform: translate3d(3%, 1%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
