@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
@@ -9,6 +10,18 @@ import { ToolIconRow } from './ToolIconRow';
 
 export const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const floatingLogos = useMemo(
+    () => [
+      { src: '/logos/ps-3d.svg', alt: 'Photoshop' },
+      { src: '/logos/ai-3d.svg', alt: 'Illustrator' },
+      { src: '/logos/figma-3d.svg', alt: 'Figma' },
+      { src: '/logos/corel-3d.svg', alt: 'CorelDRAW' },
+      { src: '/logos/chatgpt-3d.svg', alt: 'ChatGPT' },
+      { src: '/logos/gemini-3d.svg', alt: 'Gemini' },
+    ],
+    []
+  );
 
   useGSAP(() => {
     gsap.set(['.h-eyebrow', '.h-name', '.h-sub', '.h-cta'], { autoAlpha: 0, y: 30 });
@@ -54,6 +67,36 @@ export const HeroSection = () => {
       {/* ── RIGHT SIDE CONTENT ── */}
       <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 md:px-16 pt-20 pb-12 flex justify-end min-h-screen">
         <div className="h-content-wrapper relative w-full md:w-[60%] lg:w-[50%] flex flex-col justify-center min-h-screen pt-20">
+          {/* Floating tool logos (3D-styled) */}
+          <div className="pointer-events-none absolute -top-10 -right-10 w-[560px] h-[560px] hidden lg:block">
+            <div className="absolute inset-0 rounded-full bg-[#00ff88]/10 blur-[90px]" />
+            {floatingLogos.map((logo, i) => (
+              <motion.img
+                key={logo.alt}
+                src={logo.src}
+                alt={logo.alt}
+                className="absolute w-16 h-16"
+                style={{
+                  left: `${14 + (i % 3) * 28}%`,
+                  top: `${12 + Math.floor(i / 3) * 32}%`,
+                  filter: 'drop-shadow(0 18px 28px rgba(0,0,0,0.55))',
+                }}
+                initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  y: [0, -10, 0],
+                  rotate: [0, i % 2 === 0 ? 4 : -4, 0],
+                }}
+                transition={{
+                  duration: 4.2 + i * 0.35,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 0.2 + i * 0.08,
+                }}
+              />
+            ))}
+          </div>
 
           {/* Eyebrow */}
           <div className="h-eyebrow flex flex-col items-start gap-4 mb-6">
@@ -86,9 +129,11 @@ export const HeroSection = () => {
               LOKESH
             </h1>
             <h2 
-              className="text-[5rem] sm:text-[7rem] md:text-[9rem] lg:text-[11rem] font-black uppercase tracking-[-0.04em] leading-none text-transparent"
+              className="text-[5rem] sm:text-[7rem] md:text-[9rem] lg:text-[11rem] font-black uppercase tracking-[-0.04em] leading-none text-transparent drop-shadow-[0_18px_40px_rgba(0,0,0,0.65)]"
               style={{
-                WebkitTextStroke: '2px rgba(255, 255, 255, 0.8)',
+                WebkitTextStroke: '2.5px rgba(255, 255, 255, 0.86)',
+                textShadow:
+                  '0 0 24px rgba(0,255,136,0.14), 0 0 1px rgba(255,255,255,0.4)',
               }}
             >
               DEVDA
@@ -108,7 +153,7 @@ export const HeroSection = () => {
           {/* Description */}
           <div className="h-sub max-w-[42ch] mb-10">
             <p className="text-white/70 text-sm md:text-base font-medium leading-relaxed">
-              Crafting immersive visual identities, motion-rich interfaces, and editorial-grade design systems—powered by modern AI workflows.
+              Crafting immersive visual identities, motion-rich interfaces, and editorial-grade design systems�powered by modern AI workflows.
             </p>
           </div>
 
