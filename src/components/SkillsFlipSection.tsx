@@ -28,7 +28,7 @@ export const SkillsFlipSection: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skills.map((skill, i) => (
-            <TiltCard key={i} intensity={6} className="h-[240px]">
+            <TiltCard key={i} tiltAmount={6} className="h-[240px]">
               <FlipCard
                 className="h-[240px]"
                 front={

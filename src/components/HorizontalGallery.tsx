@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 import { X } from 'lucide-react';
 import { BentoGallery } from './BentoGallery';
 import { VelocityGallery, GalleryImage } from './VelocityGallery';
+import { ParallaxScroll } from './ParallaxScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,6 +96,12 @@ const categoryVelocityImages: Record<string, { rowA: GalleryImage[], rowB: Galle
       { id: 'cb4', src: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop' },
     ]
   }
+};
+
+const getAllImagesForCategory = (category: string) => {
+  const bento = categoryBentoImages[category] || [];
+  const velocity = categoryVelocityImages[category] || { rowA: [], rowB: [] };
+  return [...bento.map(i => i.src), ...velocity.rowA.map(i => i.src), ...velocity.rowB.map(i => i.src)];
 };
 
 const projects = Object.keys(categoryBentoImages).map(key => ({
@@ -227,6 +234,20 @@ export const HorizontalGallery = () => {
                   rowAVelocity={15}
                   rowBVelocity={15}
                   scrollSensitivity={8}
+                />
+              </div>
+
+              {/* SECTION 3: Parallax Scroll Gallery (Aceternity Style) */}
+              <div className="w-full mt-32 border-t border-white/5 pt-20">
+                <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-10 text-center">
+                  <h3 className="text-white/60 uppercase tracking-widest text-sm mb-2">Immersive Gallery</h3>
+                  <div className="w-12 h-1 bg-[#00ff88] mx-auto rounded-full"></div>
+                  <p className="text-white/40 text-xs mt-4">Independent column parallax movement</p>
+                </div>
+                
+                <ParallaxScroll 
+                  images={getAllImagesForCategory(activeCategory)}
+                  className="bg-transparent"
                 />
               </div>
 

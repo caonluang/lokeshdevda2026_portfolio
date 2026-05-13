@@ -1,5 +1,5 @@
 import React, { useRef, useState, ReactNode } from 'react';
-import { motion, useAnimationFrame, useMotionValue } from 'framer-motion';
+import { useAnimationFrame } from 'framer-motion';
 
 interface BorderBeamProps {
   children: ReactNode;
@@ -26,12 +26,6 @@ export const BorderBeam: React.FC<BorderBeamProps> = ({
   borderRadius = '1rem',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const progress = useMotionValue(0);
-
-  useAnimationFrame((t) => {
-    const cycle = (t / 1000 / duration) % 1;
-    progress.set(cycle);
-  });
 
   const [beamPos, setBeamPos] = useState({ x: 0, y: 0 });
 

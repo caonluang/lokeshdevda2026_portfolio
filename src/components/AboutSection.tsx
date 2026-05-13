@@ -5,6 +5,27 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const capabilities = [
+  {
+    title: 'Brand Identity',
+    detail: 'Logo systems, color palettes, typography rules, and visual guidelines for consistent brand recall.',
+  },
+  {
+    title: 'Campaign Design',
+    detail: 'Social media creatives, launch posters, ad layouts, and marketing visuals built for attention and clarity.',
+  },
+  {
+    title: 'Digital Visuals',
+    detail: 'UI compositions, landing graphics, motion-ready assets, and AI-assisted concepts for modern screens.',
+  },
+];
+
+const profileStats = [
+  ['05+', 'Years'],
+  ['40+', 'Clients'],
+  ['120+', 'Designs'],
+];
+
 export const AboutSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -49,85 +70,68 @@ export const AboutSection = () => {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="about-philosophy" className="relative w-full min-h-screen bg-[#111111] py-32 overflow-hidden flex items-center z-10">
-      
-      {/* Background Separator & Glow */}
+    <section ref={containerRef} id="about" className="relative w-full min-h-screen bg-[#0b0b0b] py-28 md:py-32 overflow-hidden flex items-center z-10">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#1A1A1A] rounded-full blur-[150px] opacity-50 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#00ff88]/10 rounded-full blur-[150px] opacity-50 pointer-events-none" />
 
-      <div className="max-w-[1600px] mx-auto w-full px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row items-center gap-20">
-        
-        {/* Left Side: Editorial Image */}
-        <div className="w-full lg:w-[40%] relative aspect-[4/5] rounded-[2rem] overflow-hidden group">
+      <div className="max-w-[1500px] mx-auto w-full px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] gap-14 lg:gap-20 items-center">
+        <div className="w-full relative aspect-[4/5] rounded-[22px] overflow-hidden group border border-white/10 bg-white/[0.03]">
           <div className="absolute inset-0 bg-[#1A1A1A] z-0" />
           <img 
-            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
-            alt="Abstract Atmosphere" 
-            className="about-image absolute inset-0 w-full h-[120%] object-cover object-center z-10 opacity-70 grayscale contrast-125 mix-blend-lighten group-hover:scale-105 transition-transform duration-1000"
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
+            alt="Graphic design texture and color study"
+            className="about-image absolute inset-0 w-full h-[120%] object-cover object-center z-10 opacity-75 grayscale contrast-125 mix-blend-lighten group-hover:scale-105 transition-transform duration-1000"
             style={{ top: '-10%' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/20 to-transparent z-20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/20 to-transparent z-20" />
           <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] z-30 pointer-events-none" />
-          <div className="absolute inset-0 border border-white/10 rounded-[2rem] z-40 pointer-events-none" />
+          <div className="absolute left-6 top-6 z-50 rounded-full border border-[#00ff88]/25 bg-black/35 px-4 py-2 backdrop-blur-md">
+            <span className="text-[10px] font-black uppercase tracking-[0.28em] text-[#00ff88]">Profile Snapshot</span>
+          </div>
+          <div className="absolute bottom-6 left-6 right-6 z-50">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00ff88]">Lokesh Devda</p>
+              <p className="mt-2 max-w-[30ch] text-sm font-medium leading-relaxed text-white/80">
+                Graphic designer focused on memorable brand systems, polished campaigns, and production-ready visuals.
+              </p>
+            </div>
+            <div className="mt-6 grid grid-cols-3 gap-3 border-t border-white/10 pt-5">
+              {profileStats.map(([value, label]) => (
+                <div key={label}>
+                  <span className="block text-2xl font-black leading-none text-white">{value}</span>
+                  <span className="mt-1 block text-[9px] font-black uppercase tracking-widest text-white/45">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Right Side: Content */}
         <div className="w-full lg:w-[60%] flex flex-col justify-center">
-          
-          <h3 className="about-text text-[#FF8A18] tracking-[0.2em] text-sm font-bold uppercase mb-6 flex items-center gap-4">
-            <span className="w-8 h-[1px] bg-[#FF8A18]" />
-            Creative Philosophy
+          <h3 className="about-text text-[#00ff88] tracking-[0.2em] text-sm font-bold uppercase mb-6 flex items-center gap-4">
+            <span className="w-8 h-[1px] bg-[#00ff88]" />
+            Professional Profile
           </h3>
 
-          <h2 className="about-text text-[3rem] md:text-[4.5rem] font-black leading-[0.95] text-white tracking-tight mb-8 max-w-[18ch]">
-            DESIGN IS NOT JUST VISUAL. <br />
-            <span className="text-[#B8B8B8] font-medium">IT'S EMOTIONAL.</span>
+          <h2 className="about-text text-[2.75rem] md:text-[4.4rem] font-black leading-[0.95] text-white tracking-tight mb-8 max-w-[19ch]">
+            STRATEGIC VISUALS FOR BRANDS THAT NEED TO STAND OUT.
           </h2>
 
-          <p className="about-text text-[#B8B8B8] text-lg font-light leading-relaxed max-w-[50ch] mb-16">
-            With over a decade of orchestrating digital experiences, I believe the best products operate at the intersection of cinematic aesthetic and ruthless utility. I don't just build websites; I architect worlds that command attention and convert curiosity into action.
+          <p className="about-text text-white/70 text-lg font-light leading-relaxed max-w-[58ch] mb-8">
+            I create brand identities, social media campaigns, UI visuals, posters, and marketing collaterals with a balance of concept, typography, and clean execution. Every design is built to look premium, communicate quickly, and stay practical for real business use.
           </p>
 
-          {/* Metrics / UI Cards */}
-          <div className="about-card-container grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-[700px]">
-            
-            {/* Metric Card 1 */}
-            <div className="about-card glass-panel rounded-2xl p-8 flex flex-col justify-between h-[180px] relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#FF8A18]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="text-[#B8B8B8] text-sm uppercase tracking-widest relative z-10">Experience</span>
-              <div className="relative z-10 flex items-end gap-3">
-                <span className="text-5xl font-black text-white leading-none">05</span>
-                <span className="text-[#FF8A18] text-xl font-bold pb-1">+ YRS</span>
-              </div>
-            </div>
+          <p className="about-text text-white/50 text-sm md:text-base leading-relaxed max-w-[58ch] mb-12">
+            My workflow combines research, layout discipline, Adobe/Corel tools, Figma, and AI-assisted exploration to move from rough ideas to final-ready creative faster without losing craft.
+          </p>
 
-            {/* Metric Card 2 */}
-            <div className="about-card glass-panel rounded-2xl p-8 flex flex-col justify-between h-[180px] relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#F5E9DD]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="text-[#B8B8B8] text-sm uppercase tracking-widest relative z-10">Global Clients</span>
-              <div className="relative z-10 flex items-end gap-3">
-                <span className="text-5xl font-black text-white leading-none">40</span>
-                <span className="text-[#F5E9DD] text-xl font-bold pb-1">+</span>
+          <div className="about-card-container grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-[900px]">
+            {capabilities.map((item) => (
+              <div key={item.title} className="about-card rounded-[16px] border border-white/10 bg-white/[0.035] p-6 transition-colors duration-300 hover:border-[#00ff88]/40 hover:bg-[#00ff88]/[0.035]">
+                <span className="block text-base font-black uppercase text-white">{item.title}</span>
+                <span className="mt-4 block text-sm leading-relaxed text-white/60">{item.detail}</span>
               </div>
-            </div>
-
-            {/* Stack Details Card */}
-            <div className="about-card sm:col-span-2 glass-panel rounded-2xl p-8 relative overflow-hidden flex items-center justify-between group">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10">
-                <span className="block text-white text-lg font-bold mb-1">Creative Arsenal</span>
-                <span className="block text-[#B8B8B8] text-sm">Figma, Photoshop, Illustrator, GSAP, Next.js</span>
-              </div>
-              <div className="relative z-10 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </div>
-            </div>
-
+            ))}
           </div>
-
         </div>
       </div>
     </section>

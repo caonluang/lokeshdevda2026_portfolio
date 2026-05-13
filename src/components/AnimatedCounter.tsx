@@ -24,7 +24,6 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
       (entries) => {
         if (entries[0].isIntersecting && !hasStarted.current) {
           hasStarted.current = true;
-          let start = 0;
           const startTime = performance.now();
           const step = (now: number) => {
             const elapsed = now - startTime;

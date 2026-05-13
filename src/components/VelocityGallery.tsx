@@ -37,6 +37,7 @@ function ScrollVelocityRow({ children, baseVelocity = 5, direction = 1, scrollSe
   const directionFactor = useRef(direction);
 
   useAnimationFrame((t, delta) => {
+    void t;
     let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
     const velocity = velocityFactor.get();
     moveBy += directionFactor.current * velocity * (delta / 100);
@@ -52,6 +53,7 @@ function ScrollVelocityRow({ children, baseVelocity = 5, direction = 1, scrollSe
         dragElastic={0.2}
         dragMomentum={false}
         onDrag={(event, info) => {
+          void event;
           baseX.set(baseX.get() + info.delta.x / 10);
         }}
       >
@@ -66,6 +68,8 @@ export interface GalleryImage {
   id: string;
   src: string;
   alt?: string;
+  colSpan?: number;
+  rowSpan?: number;
 }
 
 interface VelocityGalleryProps {

@@ -36,7 +36,7 @@ export const HeroSection = () => {
     <section
       ref={containerRef}
       id="hero"
-      className="relative w-full min-h-screen overflow-hidden flex items-center justify-end font-sans"
+      className="relative w-full min-h-screen overflow-hidden flex items-center justify-end font-sans bg-[#050505]"
     >
       <div className="absolute inset-0 z-0 h-bg-image">
         <img
@@ -54,12 +54,12 @@ export const HeroSection = () => {
             <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 backdrop-blur">
               <span className="h-2 w-2 rounded-full bg-white/80 shadow-[0_0_0_6px_rgba(255,255,255,0.08)]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                Available | Visual Designer | AI-Ready
+                Available | Graphic Designer | AI Artist
               </span>
             </div>
             <div className="text-white/75 tracking-[0.25em] text-[10px] md:text-xs font-bold uppercase flex items-center gap-3">
               <span className="w-8 h-[1px] bg-white/35" />
-              Creative Graphic Designer &amp; AI Artist
+              Brand Identity, Social Media &amp; Motion Design
             </div>
             <EyesFollowCursor eyeSize={40} pupilSize={14} eyeColor="rgba(255,255,255,0.1)" />
           </div>
@@ -87,7 +87,7 @@ export const HeroSection = () => {
 
           <div className="h-sub max-w-[42ch] mb-10">
             <p className="text-white/70 text-sm md:text-base font-medium leading-relaxed">
-              Crafting immersive visual identities, motion-rich interfaces, and editorial-grade design systems powered by modern AI workflows.
+              I design premium brand identities, social media creatives, UI layouts, and campaign visuals with a clean mix of strategy, typography, and AI-assisted production.
             </p>
           </div>
 
@@ -96,14 +96,14 @@ export const HeroSection = () => {
               className="group relative flex items-center gap-3 px-8 py-4 bg-white text-black font-bold text-sm tracking-widest uppercase rounded-full"
               strength={0.3}
             >
-              <span>Hire Me</span>
+              <span>Hire Lokesh</span>
               <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
             </MagneticButton>
             <MagneticButton
               className="flex items-center gap-3 px-8 py-4 border border-white/25 text-white font-bold text-sm tracking-widest uppercase rounded-full hover:bg-white hover:text-black transition-all duration-300"
               strength={0.25}
             >
-              Explore
+              View Work
             </MagneticButton>
           </div>
         </div>

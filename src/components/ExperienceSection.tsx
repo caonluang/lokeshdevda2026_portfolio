@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { LucideIcon } from 'lucide-react';
 import { 
   Calendar, Sparkles, Printer, Palette, 
   Globe, Award, ChevronLeft, ChevronRight, ExternalLink,
@@ -14,7 +15,7 @@ interface Experience {
   color: string;
   accent: string;
   glow: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   description: string;
   longDescription: string;
   skills: string[];

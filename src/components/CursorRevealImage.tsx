@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import React, { useRef } from 'react';
+import { useMotionValue, useSpring } from 'framer-motion';
 
 interface CursorRevealImageProps {
   src: string; // Color/reveal image
@@ -21,16 +21,11 @@ export const CursorRevealImage: React.FC<CursorRevealImageProps> = ({
   cursorSize = 220,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
 
   const rawX = useMotionValue(-999);
   const rawY = useMotionValue(-999);
   const x = useSpring(rawX, { stiffness: 200, damping: 25 });
   const y = useSpring(rawY, { stiffness: 200, damping: 25 });
-
-  // Build a CSS clipPath circle
-  const maskX = useTransform(x, (v) => `${v}px`);
-  const maskY = useTransform(y, (v) => `${v}px`);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -44,8 +39,10 @@ export const CursorRevealImage: React.FC<CursorRevealImageProps> = ({
       ref={containerRef}
       className={`relative overflow-hidden select-none ${className}`}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        rawX.set(-999);
+        rawY.set(-999);
+      }}
     >
       {/* Bottom layer: grayscale */}
       <img
@@ -57,21 +54,10 @@ export const CursorRevealImage: React.FC<CursorRevealImageProps> = ({
       />
 
       {/* Top layer: full color, revealed by cursor circle mask */}
-      <motion.div
-        className="absolute inset-0"
-        style={{
-          WebkitMaskImage: `radial-gradient(circle ${cursorSize / 2}px at ${maskX.get()} ${maskY.get()}, black 60%, transparent 100%)`,
-          maskImage: `radial-gradient(circle ${cursorSize / 2}px at ${maskX.get()} ${maskY.get()}, black 60%, transparent 100%)`,
-        }}
-        animate={{
-          WebkitMaskImage: isHovered
-            ? `radial-gradient(circle ${cursorSize / 2}px at var(--mx) var(--my), black 60%, transparent 100%)`
-            : `radial-gradient(circle 0px at -999px -999px, black 0%, transparent 0%)`,
-        }}
-      >
+      <div className="absolute inset-0">
         {/* We use a JS-driven mask since motion values can't directly drive CSS mask-image strings */}
         <MaskedColorLayer src={src} alt={alt} x={x} y={y} radius={cursorSize / 2} />
-      </motion.div>
+      </div>
     </div>
   );
 };

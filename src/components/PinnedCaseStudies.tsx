@@ -44,7 +44,7 @@ export const PinnedCaseStudies = () => {
     
     // Animate content blocks fading in and out based on scroll position
     const blocks = gsap.utils.toArray('.case-study-block');
-    blocks.forEach((block: any, i) => {
+    blocks.forEach((block: any) => {
       gsap.fromTo(block, 
         { opacity: 0.2, scale: 0.95 }, 
         {

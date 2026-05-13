@@ -1,6 +1,10 @@
 import { useRef } from 'react';
 
-export const RippleButton = ({ children, className = '', ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+type RippleButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  rippleColor?: string;
+};
+
+export const RippleButton = ({ children, className = '', rippleColor = 'rgba(255, 255, 255, 0.3)', ...props }: RippleButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -17,7 +21,7 @@ export const RippleButton = ({ children, className = '', ...props }: React.Butto
       border-radius: 50%;
       transform: scale(0);
       animation: ripple 0.6s ease-out;
-      background: rgba(255, 255, 255, 0.3);
+      background: ${rippleColor};
       left: ${x}px;
       top: ${y}px;
       width: 20px;
