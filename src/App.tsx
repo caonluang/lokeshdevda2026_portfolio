@@ -1,379 +1,698 @@
-import React, { useEffect, useMemo, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ReactLenis, useLenis } from 'lenis/react';
-import { AboutSection } from './components/AboutSection';
-import ExperienceSection from './components/ExperienceSection';
-import { VisionSection } from './components/VisionSection';
-import { HorizontalGallery } from './components/HorizontalGallery';
-import { PinnedCaseStudies } from './components/PinnedCaseStudies';
-import { StackedCards } from './components/StackedCards';
-import { ResumeSection } from './components/ResumeSection';
-import { AnimatedBackground } from './components/AnimatedBackground';
-import { HeroSection } from './components/HeroSection';
-import { StatsSection } from './components/StatsSection';
-import { CursorRevealImage } from './components/CursorRevealImage';
-import { RevealText } from './components/RevealText';
-import { ParallaxMarquee } from './components/ParallaxMarquee';
-import { TextGlowHover } from './components/TextGlowHover';
-import { UnblurTextReveal } from './components/UnblurTextReveal';
-import { RollingText } from './components/RollingText';
-import { TextVideoMask } from './components/TextVideoMask';
-import { TextPressure } from './components/TextPressure';
-import { SkillsFlipSection } from './components/SkillsFlipSection';
-import { FAQSection } from './components/FAQSection';
-import { ServicePricing } from './components/ServicePricing';
-import { Dock } from './components/Dock';
-import { LiquidImage } from './components/LiquidImage';
-import { EyesFollowCursor } from './components/EyesFollowCursor';
-import { ImageMaskedText } from './components/ImageMaskedText';
-import { GlassyButton } from './components/GlassyButton';
-import { MagneticButton } from './components/MagneticButton';
-import { RippleButton } from './components/RippleButton';
-import { CircleExpandButton } from './components/CircleExpandButton';
-import { IconSlideButton } from './components/IconSlideButton';
-import { ClipReveal } from './components/ClipReveal';
-import { Noise, AmbientGlow } from './components/VisualEffects';
-import { Home, User, Briefcase, Mail, Sparkles, Send, ArrowRight } from 'lucide-react';
-import { ToolIconRow } from './components/ToolIconRow';
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, BriefcaseBusiness, ChevronLeft, ChevronRight, Mail, MapPin, Phone } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import * as THREE from "three";
+import type { IconType } from "react-icons";
+import {
+  SiAffinitydesigner,
+  SiAffinityphoto,
+  SiBehance,
+  SiCanva,
+  SiCoreldraw,
+  SiFigma,
+  SiInstagram,
+  SiNetflix,
+  SiWordpress,
+  SiYoutube,
+} from "react-icons/si";
+import { CategoryGalleryModal, type GalleryCategory } from "./components/CategoryGalleryModal";
+import { MagneticButton } from "./components/MagneticButton";
 
-gsap.registerPlugin(ScrollTrigger);
+const heroImage =
+  "https://res.cloudinary.com/dg9q99hxf/image/upload/q_auto/f_auto/v1778159914/Hero_page_dgxklp.png";
+const portrait = "/lokesh-portrait.png";
 
-const topSkills = [
-  { name: "Brand Identity Design", desc: "Logo, brand colors, typography, brand guidelines" },
-  { name: "Social Media Creatives", desc: "Instagram posts, reels covers, ads, banners" },
-  { name: "Typography & Layout", desc: "Posters, brochures, magazines, grids" },
-  { name: "Adobe Photoshop", desc: "Photo manipulation, retouching, compositing" },
-  { name: "Adobe Illustrator", desc: "Logo, vector art, icons, illustrations" },
-  { name: "Figma / UI Design", desc: "Landing pages, app screens, website mockups" },
-  { name: "Motion Graphics", desc: "After Effects, animated posts, logo animation" },
-  { name: "Print Design", desc: "Business card, flyers, packaging, hoardings" },
-  { name: "Color Theory", desc: "Mood-based palettes, contrast, visual hierarchy" },
-  { name: "Creative Direction", desc: "Concept, storytelling, campaign design" },
-  // Soft Skills
-  { name: "Soft Skills", desc: "Strong Communication, Problem Solving, Adaptability, Leadership" }
+const portfolioImages = {
+  social: [
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611162616475-46b635cb6868?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1634942537034-2531766767d1?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop",
+  ],
+  brand: [
+    "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=1600&auto=format&fit=crop",
+  ],
+  packaging: [
+    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1605640840605-14ac1855827b?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1595642527925-4d41cb781653?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1600&auto=format&fit=crop",
+  ],
+  ads: [
+    "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop",
+  ],
+  web: [
+    "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1600&auto=format&fit=crop",
+  ],
+  lab: [
+    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop",
+  ],
+};
+
+const categories: GalleryCategory[] = [
+  {
+    id: "social",
+    name: "Social Media Design",
+    subtitle: "Campaign grids, launch posts, reels covers, carousels",
+    accent: "#ff5a36",
+    images: portfolioImages.social,
+  },
+  {
+    id: "brand",
+    name: "Logo & Brand Identity",
+    subtitle: "Logo suites, guidelines, typography systems",
+    accent: "#7c3aed",
+    images: portfolioImages.brand,
+  },
+  {
+    id: "packaging",
+    name: "Packaging Design",
+    subtitle: "Labels, dielines, mockups, shelf presence",
+    accent: "#f5a623",
+    images: portfolioImages.packaging,
+  },
+  {
+    id: "ads",
+    name: "Advertising & Campaigns",
+    subtitle: "Posters, launch banners, festive promotions",
+    accent: "#ff2d55",
+    images: portfolioImages.ads,
+  },
+  {
+    id: "web",
+    name: "UI / Web Design",
+    subtitle: "WordPress landing pages, business sites, campaign pages",
+    accent: "#00f5ff",
+    images: portfolioImages.web,
+  },
+  {
+    id: "lab",
+    name: "Creative Lab",
+    subtitle: "AI visuals, motion ideas, concept experiments",
+    accent: "#ff7b00",
+    images: portfolioImages.lab,
+  },
 ];
 
-const tools = ["CorelDRAW", "Illustrator", "Photoshop", "Figma", "ChatGPT", "Gemini", "After Effects"];
+const categoryLogos: Record<string, { Icon: IconType; label: string; tone: string; partner: string }> = {
+  social: { Icon: SiInstagram, label: "Instagram", tone: "#ff4fa3", partner: "Meta-ready campaign grids" },
+  brand: { Icon: SiAffinitydesigner, label: "Affinity", tone: "#ff9a24", partner: "Vector logo systems" },
+  packaging: { Icon: SiAffinityphoto, label: "Photo", tone: "#31a8ff", partner: "Mockup-ready packaging" },
+  ads: { Icon: SiYoutube, label: "YouTube", tone: "#ff0033", partner: "Launch poster campaigns" },
+  web: { Icon: SiWordpress, label: "WordPress", tone: "#00f5ff", partner: "Landing page design" },
+  lab: { Icon: SiFigma, label: "Figma", tone: "#a259ff", partner: "AI concept boards" },
+};
 
-const dockItems = [
-  { icon: <Home size={22} />, label: 'Home', href: '#hero' },
-  { icon: <User size={22} />, label: 'About', href: '#about' },
-  { icon: <Briefcase size={22} />, label: 'Work', href: '#work' },
-  { icon: <Mail size={22} />, label: 'Contact', href: '#contact' },
+const orbitLogos = [
+  { Icon: SiNetflix, label: "Netflix", color: "#e50914" },
+  { Icon: SiInstagram, label: "Instagram", color: "#ff4fa3" },
+  { Icon: SiYoutube, label: "YouTube", color: "#ff0033" },
+  { Icon: SiFigma, label: "Figma", color: "#a259ff" },
+  { Icon: SiCanva, label: "Canva", color: "#00c4cc" },
+  { Icon: SiBehance, label: "Behance", color: "#1769ff" },
+  { Icon: SiCoreldraw, label: "CorelDraw", color: "#67b246" },
 ];
 
-function App() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-  const progressScale = useTransform(scrollY, [0, 10000], [0, 1]);
+const tools = [
+  { name: "CorelDraw", percent: "92%" },
+  { name: "Adobe Photoshop", percent: "88%" },
+  { name: "Adobe Illustrator", percent: "85%" },
+  { name: "Figma", percent: "81%" },
+];
 
-  const hasTouch = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+const timeline = [
+  { date: "2025 - Present", company: "Graphic360", role: "Graphic Designer" },
+  { date: "2024 - 2025", company: "Angel Creation", role: "Graphic Designer" },
+  { date: "2023 - 2024", company: "Krishna Printers", role: "Graphic Designer" },
+  { date: "2023", company: "Digital Graphics", role: "Graphic Designer" },
+  { date: "2022 - 2023", company: "World Book of Star Records", role: "Graphic Designer & Web Developer" },
+  { date: "2020 - 2022", company: "Sarvagya Online Studio", role: "Graphic Designer" },
+];
+
+const softwarePills = ["Ps", "Ai", "Fg", "Cd", "Wp"];
+
+function AmbientThree() {
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) return;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, mount.clientWidth / mount.clientHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
+    mount.appendChild(renderer.domElement);
+
+    const geometry = new THREE.BufferGeometry();
+    const count = 160;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 1) positions[i] = (Math.random() - 0.5) * 18;
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+    const particles = new THREE.Points(
+      geometry,
+      new THREE.PointsMaterial({
+        size: 0.04,
+        color: 0xff5a36,
+        transparent: true,
+        opacity: 0.35,
+      }),
+    );
+
+    const torus = new THREE.Mesh(
+      new THREE.TorusGeometry(3.3, 0.8, 12, 80),
+      new THREE.MeshBasicMaterial({ color: 0x7c3aed, wireframe: true, transparent: true, opacity: 0.08 }),
+    );
+    torus.rotation.x = 0.48;
+
+    const ico = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.15, 0),
+      new THREE.MeshBasicMaterial({ color: 0x00f5ff, wireframe: true, transparent: true, opacity: 0.08 }),
+    );
+    ico.position.set(2.2, 1.2, -2);
+
+    scene.add(particles, torus, ico);
+
+    let mouseX = 0;
+    let mouseY = 0;
+    const onMouseMove = (event: MouseEvent) => {
+      mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+    };
+    window.addEventListener("mousemove", onMouseMove);
+
+    const onResize = () => {
+      const width = mount.clientWidth;
+      const height = mount.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+    window.addEventListener("resize", onResize);
+
+    let rafId = 0;
+    const render = () => {
+      particles.rotation.y += 0.0007;
+      particles.rotation.x += 0.00025;
+      torus.rotation.x += 0.0026;
+      torus.rotation.y += 0.004;
+      ico.rotation.x += 0.006;
+      ico.rotation.y += 0.005;
+      ico.position.y = Math.sin(Date.now() * 0.001) * 0.4 + 1.1;
+      camera.position.x += (mouseX * 0.45 - camera.position.x) * 0.04;
+      camera.position.y += (-mouseY * 0.45 - camera.position.y) * 0.04;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+      rafId = window.requestAnimationFrame(render);
+    };
+    render();
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("resize", onResize);
+      renderer.dispose();
+      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+    };
   }, []);
 
-  const lenis = useLenis();
-
-  useEffect(() => {
-    if (!lenis) return;
-
-    const onScroll = () => ScrollTrigger.update();
-    lenis.on('scroll', onScroll);
-
-    const onTick = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(onTick);
-    gsap.ticker.lagSmoothing(0);
-
-    // Ensure all ScrollTriggers are measured after Lenis is ready
-    ScrollTrigger.refresh();
-
-    return () => {
-      lenis.off('scroll', onScroll);
-      gsap.ticker.remove(onTick);
-    };
-  }, [lenis]);
-  
-  useEffect(() => {
-    // Custom Cursor Logic
-    if (hasTouch) return;
-    const cursor = cursorRef.current;
-    if (!cursor) return;
-
-    const moveCursor = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-    };
-
-    const handleHover = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('a') || target.closest('button')) {
-        cursor.classList.add('active');
-      } else {
-        cursor.classList.remove('active');
-      }
-      
-      // Handle project hover for specific elements if needed
-      if (target.closest('.project-hover-target')) {
-        cursor.classList.add('project-hover');
-      } else {
-        cursor.classList.remove('project-hover');
-      }
-    };
-
-    window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleHover);
-
-    return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleHover);
-    };
-  }, [hasTouch]);
-
-  return (
-    <ReactLenis
-      root
-      options={{
-        smoothWheel: true,
-        lerp: 0.08,
-        syncTouch: true,
-        touchMultiplier: 1.1,
-        wheelMultiplier: 0.9,
-        autoRaf: false,
-        anchors: true,
-      }}
-    >
-      <div className="min-h-screen text-white selection:bg-[#00ff88] selection:text-black relative">
-        <Noise />
-        <AnimatedBackground />
-        <AmbientGlow color="rgba(0,255,136,0.2)" />
-        <div ref={cursorRef} className="custom-cursor hidden md:block"></div>
-        
-        {/* Progress Bar */}
-        <motion.div 
-          className="fixed top-0 left-0 right-0 h-1 bg-[#00ff88] z-50 origin-left"
-          style={{ scaleX: progressScale }}
-        />
-
-        {/* 1. Hero Section (Full width image overlay) */}
-        <HeroSection />
-
-        <section className="px-6 md:px-20 mt-8 md:mt-0">
-          <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-4 md:gap-6">
-            <MagneticButton className="inline-flex">
-              <GlassyButton variant="neon" size="md">Book Discovery Call</GlassyButton>
-            </MagneticButton>
-            <RippleButton className="px-7 py-3.5 rounded-full border border-white/20 text-white font-bold uppercase tracking-widest text-xs">
-              Download Portfolio PDF
-            </RippleButton>
-            <div className="ml-auto hidden lg:flex">
-              <EyesFollowCursor eyeSize={52} pupilSize={16} />
-            </div>
-          </div>
-        </section>
-
-        {/* 2. About Me — With CursorRevealImage (Framer Cursor Mask Reveal) */}
-        <section id="about" className="py-32 px-6 md:px-20 max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            className="text-4xl md:text-6xl font-black uppercase mb-10"
-          >
-            <ClipReveal>
-              <UnblurTextReveal text="About Me" />
-            </ClipReveal>
-          </motion.h2>
-          <div className="flex flex-col lg:flex-row gap-16 items-start">
-            {/* Cursor Reveal Image — move cursor over image to reveal color */}
-            <div className="w-full lg:w-[40%] aspect-[4/5] rounded-2xl overflow-hidden flex-shrink-0">
-              <CursorRevealImage
-                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop"
-                alt="Portfolio work"
-                className="w-full h-full"
-                cursorSize={240}
-              />
-            </div>
-            <div className="flex-1">
-              <p className="text-2xl md:text-4xl leading-tight md:leading-snug text-white/70 font-medium max-w-5xl">
-                I craft compelling visual narratives that elevate brands. With a deep passion for{' '}
-                <TextGlowHover text="bold typography" className="text-white" />,{' '}
-                <TextGlowHover text="immersive layouts" className="text-[#00ff88]" />, and conceptual storytelling, I bridge the gap between aesthetics and strategic design.
-              </p>
-              <p className="text-white/40 mt-8 text-base leading-relaxed max-w-2xl">
-                Move your cursor over the image to reveal my work in full color.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20 px-6 md:px-20 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            <div className="rounded-2xl border border-white/10 overflow-hidden min-h-[360px]">
-              <LiquidImage
-                src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1600&auto=format&fit=crop"
-                alt="Creative Process"
-                className="w-full h-full"
-                intensity={18}
-              />
-            </div>
-            <div className="rounded-2xl border border-white/10 p-8 md:p-12 bg-black/30 flex flex-col justify-between">
-              <ImageMaskedText
-                text="Creative DNA"
-                imageSrc="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1600&auto=format&fit=crop"
-                fontSize="text-5xl md:text-7xl"
-              />
-              <p className="text-white/60 text-sm md:text-base mt-6 leading-relaxed">
-                Aapke client ne jo bola tha — maximum interaction. Isliye har section me hover, parallax, reveal,
-                motion typography, cursor response aur tactile buttons integrated hain.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Deep About + Vision */}
-        <AboutSection />
-        <VisionSection />
-
-        {/* Parallax Marquee 1 */}
-        <ParallaxMarquee text="Design • Innovation • AI Art • Brand Identity • " baseVelocity={5} direction="left" />
-
-        {/* 3. Resume Section (Experience & Education) */}
-        <ResumeSection />
-
-        {/* Experience Timeline */}
-        <ExperienceSection />
-
-        {/* 4. Stats — Animated Counters + TiltCard + BorderBeam */}
-        <StatsSection />
-
-        {/* 4. Top Skills */}
-        <section className="py-32 px-6 md:px-20 relative overflow-hidden">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-black uppercase mb-20 text-white/70">
-              <UnblurTextReveal text="Top Skills" />
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
-              {topSkills.map((skill, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  className="group cursor-pointer"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="text-[#00ff88] text-sm font-bold">0{index + 1}</span>
-                    <h3 className="text-2xl font-bold uppercase transition-colors group-hover:text-[#00ff88]">
-                      <RollingText text={skill.name} />
-                    </h3>
-                  </div>
-                  <TextPressure 
-                    text={skill.desc} 
-                    className="text-white/60 pl-8 border-l border-white/10 group-hover:border-[#00ff88] transition-colors text-sm" 
-                    flexibility={0.3}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 5. Featured Work (Horizontal Scroll) */}
-        <section className="py-6">
-          <HorizontalGallery />
-        </section>
-
-        {/* 6. Case Studies (Pinned Section) */}
-        <PinnedCaseStudies />
-
-        {/* Cinematic Transition — Text Video Mask */}
-        <section className="h-[60vh] flex items-center justify-center">
-           <TextVideoMask 
-             text="IMAGINATION" 
-             videoSrc="https://assets.mixkit.co/videos/preview/mixkit-abstract-flowing-purple-and-blue-gradient-background-23423-large.mp4"
-             className="w-full h-full"
-             fontSize="text-[15vw]"
-           />
-        </section>
-
-        {/* 7. Services (Stacked Cards) */}
-        <StackedCards />
-
-
-        {/* Skills Flip + FAQ + Pricing */}
-        <SkillsFlipSection />
-        <ServicePricing />
-        <FAQSection />
-
-        {/* Parallax Marquee 2 */}
-        <ParallaxMarquee text="Creative Flow • Modern Brutalism • High-End Motion • " baseVelocity={5} direction="right" />
-
-        {/* 8. Tools I Use (Marquee) */}
-        <section className="py-32 bg-[#00ff88] text-black overflow-hidden flex flex-col justify-center min-h-[40vh]">
-          <h2 className="text-center text-xl font-bold uppercase tracking-[0.3em] mb-16">Tools of the Trade</h2>
-          <div className="max-w-7xl mx-auto px-6 md:px-20 mb-14">
-            <div className="rounded-[2rem] bg-black/10 border border-black/10 p-6">
-              <ToolIconRow className="justify-center" />
-            </div>
-          </div>
-          <div className="relative w-full flex overflow-x-hidden group">
-            <div className="animate-marquee flex whitespace-nowrap gap-20 px-10 items-center">
-              {[...tools, ...tools, ...tools].map((tool, i) => (
-                <span key={i} className="text-6xl md:text-8xl font-black uppercase text-black/70">
-                  {tool}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 9. Contact Section */}
-        <section id="contact" className="h-screen flex flex-col items-center justify-center relative px-6 text-center">
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
-          <h2 className="text-[12vw] font-black uppercase leading-none mb-10 z-10 hover:text-[#00ff88] transition-all duration-300">
-            <RollingText text="LET'S TALK" />
-          </h2>
-          <div className="flex flex-col items-center gap-6 z-10">
-            <a href="tel:+916267382299" className="text-3xl font-black text-[#00ff88] hover:text-white transition-colors">
-              +91 6267382299
-            </a>
-            
-            <div className="mt-8 flex flex-col sm:flex-row gap-6">
-              <IconSlideButton icon={<Send size={20} />} onClick={() => window.location.href = 'mailto:hello@lokesh.dev'}>
-                Send an Email
-              </IconSlideButton>
-              <CircleExpandButton icon={<Sparkles size={20} />}>
-                Start a Project
-              </CircleExpandButton>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-6 md:gap-10 mt-16">
-              {['WhatsApp', 'Email', 'Instagram', 'Behance', 'Dribbble'].map((social, i) => (
-                <a key={i} href="#" className="text-xl md:text-2xl font-bold uppercase tracking-widest transition-colors relative group cursor-none">
-                  <TextGlowHover text={social} />
-                  <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#00ff88] transition-all group-hover:w-full" />
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="dock" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 hidden md:block">
-          <Dock items={dockItems} />
-        </section>
-
-      </div>
-    </ReactLenis>
-  );
+  return <div ref={mountRef} className="ambient-three" aria-hidden="true" />;
 }
 
-export default App;
+export default function App() {
+  const appRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [activeCategory, setActiveCategory] = useState<GalleryCategory | null>(null);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
+  const featuredCategory = categories[featuredIndex];
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    if (!appRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(".hero-seq", {
+        y: 38,
+        autoAlpha: 0,
+        duration: 0.9,
+        stagger: 0.08,
+        ease: "power3.out",
+      });
+
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((node, index) => {
+        gsap.from(node, {
+          y: 42,
+          autoAlpha: 0,
+          duration: 0.88,
+          delay: Math.min(index * 0.03, 0.18),
+          ease: "power3.out",
+          scrollTrigger: { trigger: node, start: "top 82%" },
+        });
+      });
+
+      if (heroRef.current) {
+        gsap.to(".hero-media", {
+          yPercent: 12,
+          scale: 1.05,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2,
+          },
+        });
+
+        gsap.to(".hero-copy", {
+          yPercent: -10,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
+
+      gsap.utils.toArray<HTMLElement>(".parallax-panel").forEach((node, index) => {
+        const amount = index % 2 === 0 ? -28 : 28;
+        gsap.to(node, {
+          y: amount,
+          ease: "none",
+          scrollTrigger: {
+            trigger: node,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.1,
+          },
+        });
+      });
+
+      gsap.utils.toArray<HTMLElement>(".work-card").forEach((node, index) => {
+        gsap.from(node, {
+          y: 70,
+          rotate: index % 2 === 0 ? -4 : 4,
+          autoAlpha: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: node,
+            start: "top 88%",
+          },
+        });
+      });
+    }, appRef);
+
+    const tiltCards = Array.from(document.querySelectorAll<HTMLElement>(".tilt-card"));
+    const handleMove = (event: MouseEvent) => {
+      const card = event.currentTarget as HTMLElement;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty("--rotateX", `${-y * 10}deg`);
+      card.style.setProperty("--rotateY", `${x * 12}deg`);
+      card.style.setProperty("--glowX", `${(x + 0.5) * 100}%`);
+      card.style.setProperty("--glowY", `${(y + 0.5) * 100}%`);
+    };
+    const handleLeave = (event: MouseEvent) => {
+      const card = event.currentTarget as HTMLElement;
+      card.style.setProperty("--rotateX", "0deg");
+      card.style.setProperty("--rotateY", "0deg");
+      card.style.setProperty("--glowX", "50%");
+      card.style.setProperty("--glowY", "50%");
+    };
+
+    tiltCards.forEach((card) => {
+      card.addEventListener("mousemove", handleMove);
+      card.addEventListener("mouseleave", handleLeave);
+    });
+
+    return () => {
+      tiltCards.forEach((card) => {
+        card.removeEventListener("mousemove", handleMove);
+        card.removeEventListener("mouseleave", handleLeave);
+      });
+      ctx.revert();
+    };
+  }, []);
+
+  return (
+    <div ref={appRef} className="portfolio-page">
+      <AmbientThree />
+
+      <section ref={heroRef} className="hero-stage">
+        <div className="hero-shell">
+          <div className="hero-media">
+            <img src={heroImage} alt="Lokesh Devda hero concept" />
+            <div className="hero-overlay hero-overlay-top" />
+            <div className="hero-overlay hero-overlay-bottom" />
+          </div>
+
+          <header className="hero-nav hero-seq">
+            <div className="brand-mark">Lokesh Devda</div>
+            <nav>
+              <a href="#about">About</a>
+              <a href="#services">Services</a>
+              <a href="#works">Works</a>
+              <a href="#contact">Contact</a>
+            </nav>
+            <a href="#contact" className="menu-pill">
+              Hire Me
+            </a>
+          </header>
+
+          <div className="hero-grid">
+            <div className="hero-copy">
+              <div className="hero-tag hero-seq">AI + Design Agency Feel</div>
+              <h1 className="hero-title hero-seq">
+                Visual systems
+                <br />
+                built to feel
+                <br />
+                unforgettable.
+              </h1>
+              <p className="hero-description hero-seq">
+                Lokesh Devda is a graphic designer and web developer from Indore creating brand identity, social media, packaging, campaigns, and AI-powered creative systems with premium presentation.
+              </p>
+              <div className="hero-actions hero-seq">
+                <MagneticButton
+                  as="a"
+                  href="#works"
+                  className="cta-primary"
+                  strength={0.25}
+                >
+                  <span>Explore Services</span>
+                </MagneticButton>
+                <MagneticButton
+                  as="a"
+                  href="#contact"
+                  className="cta-secondary"
+                  strength={0.22}
+                >
+                  <span>View Pricing Plans</span>
+                </MagneticButton>
+              </div>
+
+              <div className="hero-stats hero-seq">
+                <article className="glass-stat tilt-card">
+                  <span>Happy clients</span>
+                  <strong>3M+</strong>
+                </article>
+                <article className="glass-stat tilt-card">
+                  <span>ROI Improvement</span>
+                  <strong>95%</strong>
+                </article>
+                <article className="glass-stat tilt-card">
+                  <span>Client Retention</span>
+                  <strong>88%</strong>
+                </article>
+              </div>
+            </div>
+
+            <aside className="hero-side hero-seq">
+              <article className="hero-side-card hero-side-preview tilt-card">
+                <div className="mini-card-image">
+                  <img src={portrait} alt="Lokesh Devda portrait" />
+                </div>
+                <div className="mini-card-body">
+                  <span>Graphic Designer</span>
+                  <strong>230+</strong>
+                  <p>Projects built across branding, campaigns, and product visuals.</p>
+                </div>
+              </article>
+              <article className="hero-side-card tilt-card">
+                <span>Trusted Partner</span>
+                <strong>400+</strong>
+                <p>Creative workflows, premium layouts, and AI-assisted speed from concept to delivery.</p>
+              </article>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" className="content-wrap section-grid section-grid--intro">
+        <article className="panel panel--wide reveal parallax-panel">
+          <div className="panel-copy">
+            <span className="section-chip">About Me</span>
+            <h2>Designer. Strategist. Creative partner.</h2>
+            <p>
+              I work across logos, social campaigns, packaging systems, print collateral, WordPress landing pages, and AI-assisted creative workflows. The goal is always the same: make the brand feel sharper, clearer, and more premium than before.
+            </p>
+            <MagneticButton as="a" href="#contact" className="mini-link" strength={0.18}>
+              <span>Read More</span>
+            </MagneticButton>
+          </div>
+          <div className="panel-portrait tilt-card">
+            <img src={portrait} alt="Lokesh Devda" />
+          </div>
+        </article>
+
+        <article className="panel panel--metric reveal parallax-panel tilt-card">
+          <span className="section-chip">Trusted by 120+ clients</span>
+          <p>AI from idea to production in 8-10 weeks with sharp design systems and premium rollout quality.</p>
+          <strong>120+</strong>
+        </article>
+      </section>
+
+      <section id="services" className="content-wrap section-grid section-grid--services">
+        <article className="panel panel--section reveal">
+          <span className="section-chip">Services</span>
+          <h2>End-to-end creative systems.</h2>
+          <p>
+            From strategy to visuals, I build brand identity, social media design, packaging, launch campaigns, UI screens, and web assets in one cohesive premium language.
+          </p>
+        </article>
+
+        <article className="service-feature reveal tilt-card">
+          <div>
+            <span className="feature-index">(01)</span>
+            <h3>AI Strategy & Mapping</h3>
+            <p>Identify high-impact creative pipelines and define a measurable, repeatable art direction workflow.</p>
+          </div>
+          <div className="feature-pills">
+            <span>Stakeholder discovery</span>
+            <span>Value model & KPI definition</span>
+            <span>Data readiness assessment</span>
+          </div>
+        </article>
+      </section>
+
+      <section id="works" className="content-wrap works-section">
+        <div className="works-hero reveal">
+          <div>
+            <span className="section-chip">Selected Works</span>
+            <h2>Logo-led bento studio.</h2>
+          </div>
+          <p>
+            Real platform cues, brand-system cards, and a cinematic gallery launcher built for fast scanning.
+          </p>
+        </div>
+
+        <div className="logo-orbit" aria-label="Design platform logos">
+          {orbitLogos.map(({ Icon, label, color }, index) => (
+            <span
+              key={label}
+              className="logo-orbit__item"
+              style={{ ["--logo-color" as string]: color, ["--logo-order" as string]: index }}
+            >
+              <Icon aria-hidden="true" />
+              <span>{label}</span>
+            </span>
+          ))}
+        </div>
+
+        <div className="project-studio">
+          <div className="project-carousel" style={{ ["--featured" as string]: featuredCategory.accent }}>
+            <button
+              type="button"
+              className="project-nav project-nav--prev"
+              aria-label="Previous project category"
+              onClick={() => setFeaturedIndex((index) => (index - 1 + categories.length) % categories.length)}
+            >
+              <ChevronLeft size={22} />
+            </button>
+
+            <div className="project-carousel-stage" aria-live="polite">
+              {categories.map((category, index) => {
+                const logo = categoryLogos[category.id];
+                const relative = index - featuredIndex;
+                const wrapped =
+                  relative > categories.length / 2
+                    ? relative - categories.length
+                    : relative < -categories.length / 2
+                      ? relative + categories.length
+                      : relative;
+                const isActive = wrapped === 0;
+                const distance = Math.abs(wrapped);
+
+                return (
+                  <button
+                    key={category.id}
+                    type="button"
+                    className={`project-card-3d work-card ${isActive ? "is-active" : ""}`}
+                    style={{
+                      ["--accent" as string]: category.accent,
+                      ["--logo-tone" as string]: logo.tone,
+                      ["--x" as string]: `${wrapped * 180}px`,
+                      ["--scale" as string]: `${Math.max(0.72, 1 - distance * 0.08)}`,
+                      ["--rotate" as string]: `${wrapped * -12}deg`,
+                      ["--card-opacity" as string]: `${Math.max(0, 1 - distance * 0.24)}`,
+                      ["--card-brightness" as string]: `${Math.max(0.52, 1 - distance * 0.14)}`,
+                      ["--card-z" as string]: `${10 - distance}`,
+                    }}
+                    onClick={() => (isActive ? setActiveCategory(category) : setFeaturedIndex(index))}
+                    aria-label={`${isActive ? "Open" : "Focus"} ${category.name} gallery`}
+                  >
+                    <span className="project-card-logo">
+                      <logo.Icon aria-hidden="true" />
+                    </span>
+                    <span className="project-card-kicker">{logo.label}</span>
+                    <strong>{category.name}</strong>
+                    <span>{category.subtitle}</span>
+                    {isActive ? <em>Click to open gallery</em> : null}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              className="project-nav project-nav--next"
+              aria-label="Next project category"
+              onClick={() => setFeaturedIndex((index) => (index + 1) % categories.length)}
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
+
+          <div className="project-bento">
+            {categories.map((category, index) => {
+              const logo = categoryLogos[category.id];
+              return (
+                <button
+                  key={category.id}
+                  type="button"
+                  className={`project-bento-card work-card ${index === featuredIndex ? "is-selected" : ""}`}
+                  style={{ ["--accent" as string]: category.accent, ["--logo-tone" as string]: logo.tone }}
+                  onMouseEnter={() => setFeaturedIndex(index)}
+                  onFocus={() => setFeaturedIndex(index)}
+                  onClick={() => setActiveCategory(category)}
+                >
+                  <span className="project-bento-index">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="project-bento-logo">
+                    <logo.Icon aria-hidden="true" />
+                  </span>
+                  <strong>{category.name}</strong>
+                  <small>{logo.partner}</small>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="content-wrap timeline-wrap">
+        <div className="timeline-head reveal">
+          <span className="section-chip">Journey</span>
+          <h2>Professional evolution.</h2>
+        </div>
+        <div className="timeline-list">
+          {timeline.map((item) => (
+            <article key={`${item.company}-${item.date}`} className="timeline-card reveal tilt-card">
+              <div className="timeline-date">{item.date}</div>
+              <div>
+                <h3>{item.company}</h3>
+                <p>{item.role}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="content-wrap section-grid section-grid--skills">
+        <article id="skills" className="panel panel--section reveal">
+          <span className="section-chip">Skills</span>
+          <h2>Tools for premium production.</h2>
+          <p>CorelDraw, Photoshop, Illustrator, Figma, WordPress, AI prompting, and fast production systems that keep design quality high under pressure.</p>
+        </article>
+
+        <div className="tool-grid">
+          {tools.map((tool) => (
+            <article key={tool.name} className="tool-card reveal tilt-card">
+              <div className="tool-ring" style={{ ["--percent" as string]: tool.percent }}>
+                <span>{tool.percent}</span>
+              </div>
+              <h3>{tool.name}</h3>
+            </article>
+          ))}
+        </div>
+
+        <div className="software-pills reveal">
+          {softwarePills.map((pill) => (
+            <span key={pill}>{pill}</span>
+          ))}
+        </div>
+      </section>
+
+      <section id="contact" className="content-wrap contact-wrap reveal">
+        <article className="contact-shell tilt-card">
+          <div className="contact-copy">
+            <span className="section-chip">Contact</span>
+            <h2>Let's build something sharp.</h2>
+            <p>Available for freelance projects, long-term creative partnerships, and premium visual systems that need both taste and speed.</p>
+            <div className="contact-lines">
+              <p>
+                <Phone size={16} /> +91 6267382299
+              </p>
+              <p>
+                <MapPin size={16} /> Nyay Nagar, Indore
+              </p>
+              <p>
+                <Mail size={16} /> hello@lokeshdevda.com
+              </p>
+              <p>
+                <BriefcaseBusiness size={16} /> Graphic Designer / Web Developer
+              </p>
+            </div>
+          </div>
+          <MagneticButton as="a" href="mailto:hello@lokeshdevda.com" className="contact-cta" strength={0.24}>
+            <span>Start a Project</span>
+            <ArrowRight size={18} />
+          </MagneticButton>
+        </article>
+      </section>
+
+      <CategoryGalleryModal category={activeCategory} onClose={() => setActiveCategory(null)} />
+    </div>
+  );
+}
