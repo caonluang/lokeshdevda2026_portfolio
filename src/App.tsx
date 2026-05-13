@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, BriefcaseBusiness, ChevronLeft, ChevronRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Mail, MapPin, Phone } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -138,6 +138,18 @@ const orbitLogos = [
   { Icon: SiCoreldraw, label: "CorelDraw", color: "#67b246" },
 ];
 
+const workTabs = [
+  { id: "featured", label: "Featured" },
+  { id: "identity", label: "Identity" },
+  { id: "digital", label: "Digital" },
+] as const;
+
+const workGroups: Record<(typeof workTabs)[number]["id"], string[]> = {
+  featured: ["social", "brand", "ads"],
+  identity: ["brand", "packaging", "lab"],
+  digital: ["social", "web", "ads"],
+};
+
 const tools = [
   { name: "CorelDraw", percent: "92%" },
   { name: "Adobe Photoshop", percent: "88%" },
@@ -252,8 +264,8 @@ export default function App() {
   const appRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<GalleryCategory | null>(null);
-  const [featuredIndex, setFeaturedIndex] = useState(0);
-  const featuredCategory = categories[featuredIndex];
+  const [activeWorkTab, setActiveWorkTab] = useState<(typeof workTabs)[number]["id"]>("featured");
+  const visibleWorks = categories.filter((category) => workGroups[activeWorkTab].includes(category.id));
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -508,115 +520,88 @@ export default function App() {
       </section>
 
       <section id="works" className="content-wrap works-section">
-        <div className="works-hero reveal">
-          <div>
-            <span className="section-chip">Selected Works</span>
-            <h2>Logo-led bento studio.</h2>
-          </div>
-          <p>
-            Real platform cues, brand-system cards, and a cinematic gallery launcher built for fast scanning.
-          </p>
-        </div>
+        <div className="work-collection">
+          <div className="work-section-number" aria-hidden="true">02</div>
+          <div className="work-dot-pattern" aria-hidden="true" />
 
-        <div className="logo-orbit" aria-label="Design platform logos">
-          {orbitLogos.map(({ Icon, label, color }, index) => (
-            <span
-              key={label}
-              className="logo-orbit__item"
-              style={{ ["--logo-color" as string]: color, ["--logo-order" as string]: index }}
-            >
-              <Icon aria-hidden="true" />
-              <span>{label}</span>
-            </span>
-          ))}
-        </div>
-
-        <div className="project-studio">
-          <div className="project-carousel" style={{ ["--featured" as string]: featuredCategory.accent }}>
-            <button
-              type="button"
-              className="project-nav project-nav--prev"
-              aria-label="Previous project category"
-              onClick={() => setFeaturedIndex((index) => (index - 1 + categories.length) % categories.length)}
-            >
-              <ChevronLeft size={22} />
-            </button>
-
-            <div className="project-carousel-stage" aria-live="polite">
-              {categories.map((category, index) => {
-                const logo = categoryLogos[category.id];
-                const relative = index - featuredIndex;
-                const wrapped =
-                  relative > categories.length / 2
-                    ? relative - categories.length
-                    : relative < -categories.length / 2
-                      ? relative + categories.length
-                      : relative;
-                const isActive = wrapped === 0;
-                const distance = Math.abs(wrapped);
-
-                return (
-                  <button
-                    key={category.id}
-                    type="button"
-                    className={`project-card-3d work-card ${isActive ? "is-active" : ""}`}
-                    style={{
-                      ["--accent" as string]: category.accent,
-                      ["--logo-tone" as string]: logo.tone,
-                      ["--x" as string]: `${wrapped * 180}px`,
-                      ["--scale" as string]: `${Math.max(0.72, 1 - distance * 0.08)}`,
-                      ["--rotate" as string]: `${wrapped * -12}deg`,
-                      ["--card-opacity" as string]: `${Math.max(0, 1 - distance * 0.24)}`,
-                      ["--card-brightness" as string]: `${Math.max(0.52, 1 - distance * 0.14)}`,
-                      ["--card-z" as string]: `${10 - distance}`,
-                    }}
-                    onClick={() => (isActive ? setActiveCategory(category) : setFeaturedIndex(index))}
-                    aria-label={`${isActive ? "Open" : "Focus"} ${category.name} gallery`}
-                  >
-                    <span className="project-card-logo">
-                      <logo.Icon aria-hidden="true" />
-                    </span>
-                    <span className="project-card-kicker">{logo.label}</span>
-                    <strong>{category.name}</strong>
-                    <span>{category.subtitle}</span>
-                    {isActive ? <em>Click to open gallery</em> : null}
-                  </button>
-                );
-              })}
+          <div className="work-collection-head reveal">
+            <div>
+              <span>Creative Collection</span>
+              <h2>
+                Showcase your
+                <br />
+                <em>graphic works.</em>
+              </h2>
             </div>
 
-            <button
-              type="button"
-              className="project-nav project-nav--next"
-              aria-label="Next project category"
-              onClick={() => setFeaturedIndex((index) => (index + 1) % categories.length)}
-            >
-              <ChevronRight size={22} />
-            </button>
+            <div className="work-tabs" role="tablist" aria-label="Work categories">
+              {workTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={activeWorkTab === tab.id ? "is-active" : ""}
+                  onClick={() => setActiveWorkTab(tab.id)}
+                  role="tab"
+                  aria-selected={activeWorkTab === tab.id}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="project-bento">
-            {categories.map((category, index) => {
+          <div className="work-logo-row" aria-label="Creative platform logos">
+            {orbitLogos.map(({ Icon, label, color }, index) => (
+              <span
+                key={label}
+                className="work-logo-pill"
+                style={{ ["--logo-color" as string]: color, ["--logo-order" as string]: index }}
+              >
+                <Icon aria-hidden="true" />
+                {label}
+              </span>
+            ))}
+          </div>
+
+          <div className="work-showcase-grid">
+            {visibleWorks.map((category, index) => {
               const logo = categoryLogos[category.id];
               return (
                 <button
                   key={category.id}
                   type="button"
-                  className={`project-bento-card work-card ${index === featuredIndex ? "is-selected" : ""}`}
+                  className="work-showcase-card work-card"
                   style={{ ["--accent" as string]: category.accent, ["--logo-tone" as string]: logo.tone }}
-                  onMouseEnter={() => setFeaturedIndex(index)}
-                  onFocus={() => setFeaturedIndex(index)}
                   onClick={() => setActiveCategory(category)}
+                  aria-label={`Open ${category.name} gallery`}
                 >
-                  <span className="project-bento-index">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="project-bento-logo">
-                    <logo.Icon aria-hidden="true" />
+                  <span className="work-card-action" aria-hidden="true">
+                    <ArrowRight size={22} />
                   </span>
-                  <strong>{category.name}</strong>
-                  <small>{logo.partner}</small>
+                  <span className="work-card-media">
+                    <img src={category.images[index % category.images.length]} alt="" loading="lazy" />
+                  </span>
+                  <span className="work-card-shade" />
+                  <span className="work-card-content">
+                    <span className="work-card-logo">
+                      <logo.Icon aria-hidden="true" />
+                    </span>
+                    <strong>{category.name}</strong>
+                    <span className="work-card-meta">
+                      <em>{logo.label}</em>
+                      <small>{logo.partner}</small>
+                    </span>
+                  </span>
                 </button>
               );
             })}
+          </div>
+
+          <div className="work-bottom-action reveal">
+            <button type="button" onClick={() => setActiveCategory(visibleWorks[0])}>
+              View Full Collection
+              <ArrowRight size={18} />
+            </button>
           </div>
         </div>
       </section>
