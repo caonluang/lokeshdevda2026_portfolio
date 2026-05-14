@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface ParallaxMarqueeProps {
@@ -15,7 +15,8 @@ export const ParallaxMarquee: React.FC<ParallaxMarqueeProps> = ({
   direction = 'left'
 }) => {
   const { scrollY } = useScroll();
-  const x = useTransform(scrollY, [0, 5000], [0, direction === 'left' ? -1000 : 1000]);
+  const distance = baseVelocity * 200;
+  const x = useTransform(scrollY, [0, 5000], [0, direction === 'left' ? -distance : distance]);
 
   return (
     <div className={`overflow-hidden whitespace-nowrap py-10 ${className}`}>

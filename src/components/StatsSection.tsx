@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useInView } from 'framer-motion';
 import { AnimatedCounter } from './AnimatedCounter';
 import { RevealText } from './RevealText';
 import { TiltCard } from './TiltCard';
@@ -35,7 +35,7 @@ export const StatsSection: React.FC = () => {
         {/* Stats grid */}
         <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, i) => (
-            <TiltCard key={i} intensity={8} className="h-full">
+            <TiltCard key={i} tiltAmount={8} className="h-full">
               <BorderBeam
                 className="p-8 h-full bg-[#111111] min-h-[220px] flex flex-col justify-between"
                 colorFrom="#00ff88"

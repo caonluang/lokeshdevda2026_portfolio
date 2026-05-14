@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { 
-  ArrowRight, Globe, Palette, 
+  Globe, Palette, 
   Layers, Megaphone, Layout, Box, Sparkles
 } from 'lucide-react';
 

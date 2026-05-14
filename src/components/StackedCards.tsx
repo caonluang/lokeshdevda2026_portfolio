@@ -36,7 +36,7 @@ export const StackedCards = () => {
           scale: 0.95 - (index * 0.01),
           filter: "brightness(0.5)", // Darken instead of opacity to prevent see-through
           scrollTrigger: {
-            trigger: cards[index + 1],
+            trigger: cards[index + 1] as any,
             start: "top 80%",
             end: "top 20%",
             scrub: true,
